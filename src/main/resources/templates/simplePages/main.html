@@ -1,21 +1,207 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" type="text/css" href="/css/mainStyle.css">
-    <title>Поздравления</title>
-</head>
-<body>
-<header>
-    <h1>Поздравления Коллег и Друзей</h1>
-</header>
+<link rel="stylesheet" href="/css/mainStyle.css">
+<html xmlns:th="http://www.thymeleaf.org">
+<script src="/js/mainJs.js"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Sofia+Sans+Condensed&display=swap" rel="stylesheet">
 
-<div class="container">
-    <form class="greeting-form">
-        <textarea class="greeting-textarea" placeholder="Введите ваше поздравление"></textarea>
-        <button class="submit-button" type="submit">Отправить</button>
-    </form>
+<body>
+<div class="blurBackdrop" style="height: 953px; width: 1920px;"><div class="point" style="left: 67.4191%; top: 60.283%;"></div><div class="point" style="left: 1.67132%; top: 95.0466%;"></div><div class="point" style="left: 19.2181%; top: 20.4528%;"></div><div class="point" style="left: 38.1294%; top: 58.7547%;"></div><div class="point" style="left: 62.0485%; top: 48.9086%;"></div><div class="blur"></div></div>
+<button class="full-page-button" onclick="bigButtonClose()"></button>
+
+<nav class="navbar false">
+    <div class="backdrop"></div>
+    <div class="container container-style">
+        <div class="static">
+            <a class="logo">
+                <img src="/images/logo.png" alt="Munix Logo">
+                <h1>CS</h1>
+            </a>
+
+        </div>
+        <ul class="links false">
+            <div id="firstbutton" class="rectangle" style="display: block;">
+                <button onclick="openMenu()" type="submit">Открыть меню</button>
+            </div>
+            <div id="secondbutton" class="rectangle" style="display: block;">
+                <button onclick="window.location.href='https://github.com/kiruxa193/congratSystem'" type="button">Github</button>
+            </div>
+            <div id="thindbutton" class="rectangle" style="display: block;">
+                <button onclick="logout()" type="submit">Выход</button>
+            </div>
+        </ul>
+    </div>
+</nav>
+
+<div class="login-box">
+
+    <div class="container">
+        <div class="sidebar" id="menu">
+
+            <button onclick="FriendList()">Друзья</button>
+            <button onclick="FriendListDropDown()">Мои поздравления</button>
+            <button onclick="closeMenu()">Закрыть меню</button>
+            <button onclick="logout()">Выход</button>
+        </div>
+        <div class="content" id="content1">
+            <button onclick=FriendPopup() type="submit">Добавить друга</button>
+            <h2>Список друзей</h2>
+            <ul id="friends-list">ф
+            </ul>
+
+        </div>
+        <div class="content" id="content2">
+            <button onclick="EmailSentPopUp()" type="submit">Отправить</button>
+        </div>
+        <div class="content" id="content3">
+            <button onclick="CongratSentPopUp()" type="submit">Отправить поздравление из списка друзей</button>
+            <button onclick="EmailSentPopUp()" type="submit">Отправить поздравление человеку не из списка друзей</button>
+            <h2>Список отправленных поздравлений</h2>
+            <ul id="congrat-list">
+            </ul>
+        </div>
+    </div>
+
+
+    <div class="popup" id="add-friend">
+        <div class="popup-content">
+            <span class="close-button" onclick="FriendPopupclose()">&times;</span>
+
+            <form method="post" th:action="@{/api/friends/add}">
+
+                <div class="user-box">
+                    <input type="email" id="friend_email" name="friend_email" required><br>
+                    <label for="friend_email">Электронная почта:</label>
+
+                </div>
+                <div class="user-box">
+                    <input type="text" id="friend_surname" name="friend_surname" required><br>
+                    <label for="friend_surname">Фамилия:</label>
+                </div>
+
+                <div class="user-box">
+                    <input type="text" id="friend_date_of_birth" name="friend_date_of_birth" required><br>
+                    <label for="friend_date_of_birth">Дата рождения:</label>
+
+                </div>
+                <div class="user-box">
+
+                    <input type="text" id="friend_name" name="friend_name" required><br>
+                    <label for="friend_name">Имя:</label>
+
+                </div>
+                <button onclick="AddFriendCheck()" type="button">Добавить</button>
+            </form>
+
+            <button onclick="FriendPopupclose()">Закрыть</button>
+        </div>
+    </div>
+
+
+    <div class="popup" id="email-sent">
+        <div class="popup-content">
+            <span class="close-button" onclick="EmailSentPopUpclose()">&times;</span>
+
+            <form method="post" th:action="@{/api/emails/send}">
+                <div class="user-box">
+                    <input type="email" id="to" name="to" required><br>
+                    <label for="to">Кому:</label>
+
+                </div>
+
+                <div class="user-box">
+                    <input type="text" id="subject" name="subject" required><br>
+                    <label for="subject">Тема:</label>
+
+                </div>
+                <div class="user-box">
+                    <input id="message" name="message" required></input><br>
+                    <label for="message">Сообщение:</label>
+
+                </div>
+                <button onclick="SendEmailCheck()" type="button">Отправить</button>
+                <button id="datetimebutton2" onclick="DateTimeButton2()" type="button">Выбрать дату и время отправки</button>
+                <input type="datetime-local" id="dateTimePicker2" name="selectedDateTime" hidden>
+            </form>
+
+
+
+
+            <button onclick="EmailSentPopUpclose()">Закрыть</button>
+        </div>
+    </div>
+
+
+
+
+
+
+    <div class="popup" id="congrat-sent">
+        <div class="popup-content">
+            <span class="close-button" onclick="CongratSentPopUpclose()">&times;</span>
+
+            <form method="post" th:action="@{/api/emails/send}">
+                <div class="user-box">
+                    <input type="text" id="title" name="title" required><br>
+                    <label for="to">Заголовок:</label>
+
+                </div>
+
+                <div class="user-box">
+                    <input type="text" id="text" name="text" required><br>
+                    <label for="subject">Текст сообщения:</label>
+
+                </div>
+
+                <div class="user-box">
+                    <input type="text" id="attachment" name="attachment" required></input><br>
+                    <label for="attachment">Приложение:</label>
+
+                </div>
+                <select id="friendlst" name="friends">
+                </select>
+                <button onclick="CongratSend()" type="button">Отправить</button>
+                <button id="datetimebutton" onclick="DateTimeButton()" type="button">Выбрать дату и время отправки</button>
+                <input type="datetime-local" id="dateTimePicker" name="selectedDateTime" hidden>
+
+            </form>
+
+            <div class="popup-content" id="loading-indicator" style="display: none;">
+                <div class="loading-indicatorf"></div>
+                <p>Loading...</p>
+            </div>
+
+            <button onclick="CongratSentPopUpclose()">Закрыть</button>
+        </div>
+    </div>
+
+
+
+
+
+
+
+
+
+
+
+
+    <div class="popup" id="success-popup" style="display: none;">
+        <div class="popup-content">
+            <span class="close-button" onclick="closePopup()">&times;</span>
+            <p id="success-message">Сообщение успешно отправлено!</p>
+            <button onclick="closePopup()">ОК</button>
+        </div>
+    </div>
+
+    <div class="popup" id="friend_success" style="display: none;">
+        <div class="popup-content">
+            <span class="close-button" onclick="FriendSuccessPopupclose()">&times;</span>
+            <p>Друг успешно добавлен!</p>
+            <button onclick="FriendSuccessPopupclose()">ОК</button>
+        </div>
+    </div>
+
 </div>
+
 </body>
-</html>
